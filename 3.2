@@ -1,0 +1,214 @@
+// we used vector because it is an array that is capable of changing its own size.
+// string is needed for noting stuff 
+// cmath is need for mathematical equation due to the nature of the question
+// constexpr float PI is used to make computer to remember that if you see a PI written somewhere in the code. It is 3.141592653589793238462643383.
+#include <iostream>
+#include <vector>
+#include <string>
+#include <cmath>
+
+constexpr float PI = 3.141592653589793238462643383;
+
+using std::vector;
+// we used double for getside for added precision of measurement of the side for the triangle inorder to get the information that is needed. 
+vector<double> getSides()
+{
+	vector<double> sides;
+	double side;
+	std::string input;
+// this inputstart used for marking of goto statements 
+// we used try and input for the question to prevent crashes. 
+// the use of goto statement is to re ask the same question of the question being answer.
+// this occurs only when users inputs words or 0. 
+inputstart:
+fside:
+	cout << "Enter length of the bottom side: ";
+	cin >> input;
+	try
+	{
+		side = std::stod(input);
+		if (side <= 0)
+		{
+			std::cerr << "side can't be less than or equal to 0\nplease try again\n";
+			goto fside;
+		}
+		sides.push_back(side);
+	}
+	catch (std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+		goto fside;
+	}
+sside:
+// this inputstart used for marking of goto statements 
+// we used try and input for the question to prevent crashes. 
+// the use of goto statement is to re ask the same question of the question being answer.
+// this occurs only when users inputs words or 0. 
+
+	cout << "Enter length of the left side: ";
+	cin >> input;
+	try
+	{
+		side = std::stod(input);
+		if (side <= 0)
+		{
+			std::cerr << "side can't be less than or equal to 0\nplease try again\n";
+			goto sside;
+		}
+		sides.push_back(side);
+	}
+	catch (std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+		goto sside;
+	}
+tside:
+// this inputstart used for marking of goto statements 
+// we used try and input for the question to prevent crashes. 
+// the use of goto statement is to re ask the same question of the question being answer.
+// this occurs only when users inputs words or 0. 
+
+	cout << "Enter length of the right side: ";
+	cin >> input;
+	try
+	{
+		side = std::stod(input);
+		if (side <= 0)
+		{
+			std::cerr << "side can't be less than or equal to 0\nplease try again\n";
+			goto tside;
+		}
+		sides.push_back(side);
+	}
+	catch (std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+		goto tside;
+	}
+// this is an array to arrange the measurements of sides for triangle if it could from a triangle. One of the side should be equal or more than two measurement of two sides. 
+// if not it will re ask again for measurements.
+	if (sides[0] >= sides[1] + sides[2] || sides[1] >= sides[0] + sides[2] || sides[2] >= sides[0] + sides[1])
+	{
+		std::cerr << "Sides don't make a valid triangle\nPlease try again\n";
+		goto inputstart;
+	}
+	return sides;
+}
+// this vector is used for getting the angles of the triangles 
+// we used angles.push_back for adding the value to the back of the variable called angles. 
+// std::acos is used for the code of the formula for the formula of the triangle angles. 
+vector<double> getAngles(vector<double>& sides)
+{
+	vector<double> angles;
+	angles.push_back(std::acos((sides[1] * sides[1] + sides[2] * sides[2] - sides[0] * sides[0]) / (2 * sides[2] * sides[1])));
+	angles.push_back(std::acos((sides[2] * sides[2] + sides[0] * sides[0] - sides[1] * sides[1]) / (2 * sides[2] * sides[0])));
+	angles.push_back(std::acos((sides[0] * sides[0] + sides[1] * sides[1] - sides[2] * sides[2]) / (2 * sides[1] * sides[0])));
+	return angles;
+}
+
+// we used this to if for checking the condition to check which is equilateral, isosceles or scalene. 
+std::string lengthType(vector<double>& sides)
+{
+	if (sides[0] == sides[1] && sides[0] == sides[2])
+		return "equilateral";
+	if (sides[0] == sides[1] || sides[0] == sides[2] || sides[1] == sides[2])
+		return "isosceles";
+	return "scalene";
+}
+// from the information of measurement of the sides of the triangle. We could calculate the perimeter of the triangle. 
+double getPerimeter(vector<double>& sides)
+{
+	return sides[0] + sides[1] + sides[2];
+}
+// with the information sides of the triangle and perimeter , we could calculate for the area of the triangle. 
+double getArea(vector<double>& sides, double perimeter = 0)
+{
+	if (perimeter == 0)
+		perimeter = getPerimeter(sides);
+	double p = perimeter / 2;
+	return std::sqrt(p*(p - sides[0])*(p - sides[1])*(p - sides[2]));
+}
+// we used if conditons with arrays for the get the type of angle from the triangle.
+// this array checks which of the angle is the biggest angle to describe the type of triangle.
+// this onces it knows which angle is biggest. It will use if code to determine what type of angle it is in the triangle. 
+std::string angleType(vector<double>& angles)
+{
+	for (auto it = angles.begin(); it<angles.end(); ++it)
+	{
+		if (*it == PI / 2)
+			return "right";
+		if (*it > PI / 2)
+			return "obtuse";
+	}
+	return "acute";
+}
+// this vector is used to check if the triangle has a apothem. 
+// we will use the information from the sides, angles, perimeter in order to find its apothem.
+// once it knows that it has equal angle and sides, it will get area to be divided by the perimeter inorder to get apothem. 
+// if the triangle doesn’t fit in this catergory, it will say that it doesn’t have apothem.
+double getApothem(vector<double>& sides, vector<double>& angles, double perimeter = 0.0, double area = 0.0, std::string ltype = "")
+{
+	if (perimeter == 0)
+		perimeter = getPerimeter(sides);
+	if (area == 0)
+		area = getArea(sides, perimeter);
+	if (ltype == "")
+	{
+		ltype = lengthType(sides);
+	}
+	if (ltype != "equilateral")
+		return -1;
+	if (angles[0] != angles[1] || angles[0] != angles[2])
+		return -1;
+	return 2 * area / perimeter;
+}
+// in order to get circumference, we have to have the measurements of the sides, and angles .
+// with these measurements , we have to get the perpendicular bisector. 
+// O in om, ox, oy means old for old m or old x or old y
+// n in nm, nx, ny means new for new m or new x or new y. 
+// we the use of perpendicular bisector. We can get circumcenter by Pythagorean theorem. 
+double getCircumcenter(vector<double>& sides, vector<double>& angles)
+{
+	double x = sides[0] / 2;
+
+	double om = std::tan(angles[2]);
+	double ox = sides[1] / 2 * std::cos(angles[2]);
+	double oy = om * ox;
+
+	double nm = -1 / om;
+	double nb = oy - nm*ox;
+
+	double y = nm*x + nb;
+
+	return std::sqrt(x*x + y*y);
+}
+// we used this part to print out all of the information that was retrieve while ago. 
+int main()
+{
+	vector<double> sides = getSides();
+	vector<double> angles = getAngles(sides);
+	std::string len_type = lengthType(sides);
+	std::string angle_type = angleType(angles);
+	double perimeter = getPerimeter(sides);
+	double area = getArea(sides, perimeter);
+	double apothem = getApothem(sides, angles, perimeter, area, len_type);
+	double circumcenter = getCircumcenter(sides, angles);
+// this part is list for all of the information that was retrieve a while ago. 
+	cout << "\ninterior angles: \n";
+	for (auto it = angles.begin(); it<angles.end(); ++it)
+		cout << *it * 180 / PI << "°\n";
+	cout << "type of triangle according to sides: " << len_type << '\n';
+	cout << "area: " << area << "\nperimeter: " << perimeter << '\n';
+	cout << "type of triangle according to angles: " << angle_type << '\n';
+	cout << "length of apothem: ";
+// if the triangle is not equilateral triangle. It automatically states no apothem but if it has it will calculate and place the answer. 
+	if (apothem>0)
+		cout << apothem << '\n';
+	else
+		cout << "no apothem, only in regular triangles\n";
+	cout << "length of circumcenter: " << circumcenter;
+
+	cin.get();
+	cin.get();
+	return 0;
+}
