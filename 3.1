@@ -1,0 +1,193 @@
+#include<iostream>
+#include <cmath>
+#include <string>
+
+using namespace std;
+
+int main()
+{
+	string first, last, a, input, name[50];
+	int  exp, skill, machin, fin, prelim;
+	double b, transmuted, raw[50];
+	cout << "Please make all of grades are over 100" << endl;
+	cout << "Please input your first and last name: " << endl;
+		// 50 names were needed due to the nature of requiring 50 students. 
+		// we used 0 to start in order prevent confusions with computers because they will always start with zero so instead with starts with 1 and ends with 50. We made it starting with zero and ends with 49.
+		// we used name[i] = (first + “ “ + last) to sort up the names for the final ranking of their. 
+		// the use of for j++ is for so the program will plus 1 after every input like exp1= n then program is asking the next question exp2=?.
+	for (int i = 0; i < 50; i++)
+	{
+		exp = 0;
+		skill = 0;
+		machin = 0;
+		cout << "Student " << i + 1 << ":";
+		cout << "\nFirst Name: ";
+		cin >> first;
+		cout << "\nLast Name: ";
+		cin >> last;
+		name[i] = (first + "  " + last);
+		for (int j = 0; j < 9; j++)
+		{
+			// this will allow the user to input scores of experiment from 1-9.
+			// we used stoi(input) to have safety protection in case of accidentally adding letters under experiment. Try allows the input of 1-9. Catch is one responsible taking care of software to avoid crashing during the test. It will report an error making to ask the user to reinput the grade.
+			// the use of j+1 is for array to progress after every input
+			// exp /=9 is used to divide into 9 sets of experiment in order to get the average of the experiments.
+		experi_:
+			cout << "Experiment " << j + 1 << ":";
+			cin >> input;
+			try
+			{
+				exp += stoi(input);
+			}
+			catch (exception& e)
+			{
+				cerr << e.what() << '\n';
+				goto experi_;
+			}
+
+		}
+		exp /= 9;
+		for (int x = 0; x < 9; x++)
+		{
+		skill_:
+			// this will allow the user to input scores of skill test from 1-9.
+			// we used stoi(input) to have safety protection in case of accidentally adding letters under skill. Try allows the input of 1-9. Catch is one responsible taking care of software to avoid crashing during the test. It will report an error making to ask the user to reinput the grade.
+// the use of x+1 is for array to progress after every input.
+			// skill /=9 is used to divide into 9 sets of skill test in order to get the average of the experiments.
+
+			cout << "Skills Test " << x + 1 << ":";
+			cin >> input;
+			try
+			{
+				skill += stoi(input);
+			}
+			catch (exception& e)
+			{
+				cerr << e.what() << '\n';
+				goto skill_;
+			}
+
+
+		}
+		skill /= 9;
+		for (int q = 0; q < 2; q++)
+		{
+		machin_:
+			// this will allow the user to input scores of machin from 1-9.
+			// we used stoi(input) to have safety protection in case of accidentally adding letters under machin. Try allows the input of 1-9. Catch is one responsible taking care of software to avoid crashing during the test. It will report an error making to ask the user to reinput the grade.
+			// the use of q+1 is for array to progress after every input.
+
+			// machin /=3 is used to divide into 9 sets of experiment in order to get the average of the experiments.
+
+			cout << "Machine Problem " << q + 1 << ":";
+			cin >> input;
+			try
+			{
+				machin += stoi(input);
+			}
+			catch (exception& e)
+			{
+				cerr << e.what() << '\n';
+				goto machin_;
+			}
+		}
+		// we asked prelim and finals just once. 
+		// we listed averages of experiment, skill, machine.
+		// we calculated within the require listed in the question with the proper responding percentage per test.
+		machin /= 2;
+		cout << "Prelims Score: ";
+		cin >> prelim;
+		cout << "Finals Score: ";
+		cin >> fin;
+		cout << "Experiment Average: " << exp << "%" << endl;
+		cout << "Skills Test Average: " << skill << "%" << endl;
+		cout << "Machine Problem Average: " << machin << "%" << endl;
+		cout << "Major Exams Total: " << (prelim * .20) + (fin * .30) << "%" << endl;
+		cout << "Raw Grade: " << (prelim * .20) + (fin * .30) + (exp * .10) + (skill * .20) + (machin * .20) << "%" << endl;
+		// we used raw[i] to record the profiles per student grades so we can sort the top ranking of students.
+		raw[i] = (prelim * .20) + (fin * .30) + (exp * .10) + (skill * .20) + (machin * .20);
+		// we used if and else as conditions to refer what final raw the student is from 1.00 – 5.00. 
+		if (raw[i] < 60)
+		{
+			transmuted = 5.00;
+		}
+		else if (raw[i] <= 64.44)
+		{
+			transmuted = 3.00;
+		}
+		else if (raw[i] <= 68.89)
+		{
+			transmuted = 2.75;
+		}
+		else if (raw[i] <= 73.33)
+		{
+			transmuted = 2.50;
+		}
+		else if (raw[i] <= 77.78)
+		{
+			transmuted = 2.25;
+		}
+		else if (raw[i] <= 82.22)
+		{
+			transmuted = 2.00;
+		}
+		else if (raw[i] <= 86.67)
+		{
+			transmuted = 1.75;
+		}
+		else if (raw[i] <= 91.11)
+		{
+			transmuted = 1.50;
+		}
+		else if (raw[i] <= 95.56)
+		{
+			transmuted = 1.25;
+		}
+		else if (raw[i] <= 100)
+		{
+			transmuted = 1.00;
+		}
+
+		cout << "Final Grade: " << transmuted << endl;
+		// these are conditions that could happen depending on the raw score if the student passed or not.
+		if (raw[i] < 60)
+		{
+			cout << "Sorry, you failed." << endl;
+		}
+		else if (raw[i] >= 60)
+		{
+			cout << "Congratulations, you passed." << endl;
+		}
+	}
+		// the first loop will check and arrange students from 1-50 if who is the highest to the lowest. 
+		// we used (raw[var] < raw[var + 1]) to help them arrange and move around variables
+		// we used double for temp_raw and raw is because those numbers could use a bit of help with able to calculate with decimals
+		// we used string for temp_name and name is as names of the raw and temp_raw to give them identity. 
+		// temp is used to hold raw or names so they can move easily around due to having temp_raw or temp_name as a character either to hold or move the raw or name. 
+	cout << "top ranking of students are : \n";
+	for (int loop = 0; loop<49; ++loop)
+	{
+		for (int var = 0; var<49 - loop; ++var)
+		{
+			if (raw[var] < raw[var + 1])
+			{
+				double temp_raw = raw[var];
+				raw[var] = raw[var + 1];
+				raw[var + 1] = temp_raw;
+
+				string temp_name = name[var];
+				name[var] = name[var + 1];
+				name[var + 1] = temp_name;
+			}
+		}
+	}
+		// we used another array to print out 1-10 students out of 50 in order. From highest to lowest. 
+		// we used : to segregate the name of the person and grade of the person.
+	for (int i = 0; i < 10; ++i)
+	{
+		cout << name[i] << " : " << raw[i] << "\n";
+	}
+	cin.get();
+	cin.get();
+	return 0;
+}
